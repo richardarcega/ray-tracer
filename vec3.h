@@ -19,7 +19,7 @@ class vec3 {
         double operator[](int i ) const { return e[i]; }
         double& operator[](int i ) { return e[i]; }
 
-        vec3& operator +=(const vec3 &v) {
+        vec3& operator+=(const vec3 &v) {
             e[0] += v.e[0];
             e[1] += v.e[1];
             e[2] += v.e[2];
@@ -43,6 +43,12 @@ class vec3 {
 
         double length_squared() const {
             return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
+        }
+
+        bool near_zero() const {
+            // Return true if the vector is close to zero in all dimensions
+            const auto s = 1e-8;
+            return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
         }
 
         inline static vec3 random() {
@@ -83,6 +89,10 @@ inline vec3 operator*(const vec3 &v, double t) {
     return t * v;
 }
 
+inline vec3 operator*(const vec3 &u, const vec3 &v) {
+    return vec3(u.e[0] * v.e[0], u.e[1] * v.e[1], u.e[2] * v.e[2]);
+}
+
 inline vec3 operator/(vec3 v, double t) {
     return (1/t) * v;
 }
@@ -121,6 +131,10 @@ vec3 random_in_hemisphere(const vec3& normal) {
         return in_unit_sphere;
     else
         return -in_unit_sphere;
+}
+
+vec3 reflect(const vec3& v, const vec3& n) {
+    return v - 2*dot(v,n)*n;
 }
 
 #endif
